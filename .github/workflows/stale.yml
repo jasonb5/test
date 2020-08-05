@@ -15,8 +15,8 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Stale pull request message'
-        days-before-stale: 0.008333333
-        days-before-close: 0.001388889
+        days-before-stale: 0.020833333
+        days-before-close: 0.013888889
         stale-issue-label: 'stale'
         stale-pr-label: 'stale'
         
