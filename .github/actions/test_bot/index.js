@@ -11,3 +11,18 @@ try {
 } catch (error) {
   core.setFailed(error.message);
 }
+
+async function run() {
+  const token = core.getInput('token');
+  const octokit = github.getOctokit(token);
+  const payload = github.context.payload;
+
+  octokit.issues.createComment({
+    owner: payload.repository.owner.login,
+    repo: payload.repository.name,
+    issue_number: payload.issue.number,
+    body: `Hello`,
+  });
+}
+
+run();
