@@ -20,21 +20,17 @@ const commands = [
 let command = commands.find((x) => { return x.regex.test('/hello') });
 
 async function run() {
-  // const token = core.getInput('token');
-  // const octokit = github.getOctokit(token);
-  // const payload = github.context.payload;
+  const token = core.getInput('token');
+  const octokit = github.getOctokit(token);
+  const payload = github.context.payload;
 
-  // octokit.issues.createComment({
-  //   owner: payload.repository.owner.login,
-  //   repo: payload.repository.name,
-  //   issue_number: payload.issue.number,
-  //   body: `Hello`,
-  // });
+  console.log(payload);
 
   let myOutput = '';
   let myError = '';
 
   const options = {};
+
   options.listeners = {
     stdout: (data) => {
       myOutput += data.toString();
@@ -45,6 +41,13 @@ async function run() {
   };
 
   await exec.exec('black', options);
+
+  octokit.issues.createComment({
+    owner: payload.repository.owner.login,
+    repo: payload.repository.name,
+    issue_number: payload.issue.number,
+    body: `This PR is ok....`,
+  });
 }
 
 run();
