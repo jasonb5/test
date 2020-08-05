@@ -2,7 +2,7 @@ name: Mark stale issues and pull requests
 
 on:
   schedule:
-  - cron: "*/10 * * * *"
+  - cron: "*/5 * * * *"
 
 jobs:
   stale:
@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/stale@v1
+    - name: stale
+      uses: actions/stale@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'Stale issue message'
@@ -20,5 +21,5 @@ jobs:
         stale-issue-label: 'stale'
         stale-pr-label: 'stale'
     - name: test
-      run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+      run: echo 'The time was ${{ steps.stale.outputs.time }}.'
         
