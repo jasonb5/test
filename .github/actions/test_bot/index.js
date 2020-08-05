@@ -19,32 +19,32 @@ const commands = [
 
 let command = commands.find((x) => { return x.regex.test('/hello') });
 
-let myOutput = '';
-let myError = '';
-
-const options = {};
-options.listeners = {
-  stdout: (data: Buffer) => {
-    myOutput += data.toString();
-  },
-  stderr: (data: Buffer) => {
-    myError += data.toString();
-  }
-};
-
-await exec.exec('black', options);
-
 async function run() {
-  const token = core.getInput('token');
-  const octokit = github.getOctokit(token);
-  const payload = github.context.payload;
+  // const token = core.getInput('token');
+  // const octokit = github.getOctokit(token);
+  // const payload = github.context.payload;
 
-  octokit.issues.createComment({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    issue_number: payload.issue.number,
-    body: `Hello`,
-  });
+  // octokit.issues.createComment({
+  //   owner: payload.repository.owner.login,
+  //   repo: payload.repository.name,
+  //   issue_number: payload.issue.number,
+  //   body: `Hello`,
+  // });
+
+  let myOutput = '';
+  let myError = '';
+
+  const options = {};
+  options.listeners = {
+    stdout: (data) => {
+      myOutput += data.toString();
+    },
+    stderr: (data) => {
+      myError += data.toString();
+    }
+  };
+
+  await exec.exec('black', options);
 }
 
-// run();
+run();
