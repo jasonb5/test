@@ -1,6 +1,6 @@
 on:
-  issue_comment:
-    types: [created]
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   hello_world_job:
@@ -15,7 +15,7 @@ jobs:
         python-version: '3.x'
     - name: Python deps
       run: |
-        python -m pip install --upgrade black
+        python -m pip install --upgrade black flake8 flake8-json
     - name: Hello world action step
       id: hello
       uses: ./.github/actions/test_bot
