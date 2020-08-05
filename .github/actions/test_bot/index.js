@@ -1,16 +1,38 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const exec = require('@actions/exec');
 
-try {
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  const payload = JSON.stringify(github.context.payload, undefined, 2);
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
-}
+// try {
+//   const nameToGreet = core.getInput('who-to-greet');
+//   console.log(`Hello ${nameToGreet}!`);
+//   const time = (new Date()).toTimeString();
+//   core.setOutput("time", time);
+//   const payload = JSON.stringify(github.context.payload, undefined, 2);
+//   console.log(`The event payload: ${payload}`);
+// } catch (error) {
+//   core.setFailed(error.message);
+// }
+
+const commands = [
+  {name: 'hello', regex: new RegExp('^\/hello.*$')},
+];
+
+let command = commands.find((x) => { return x.regex.test('/hello') });
+
+let myOutput = '';
+let myError = '';
+
+const options = {};
+options.listeners = {
+  stdout: (data: Buffer) => {
+    myOutput += data.toString();
+  },
+  stderr: (data: Buffer) => {
+    myError += data.toString();
+  }
+};
+
+await exec.exec('black', options);
 
 async function run() {
   const token = core.getInput('token');
@@ -25,4 +47,4 @@ async function run() {
   });
 }
 
-run();
+// run();
