@@ -19,4 +19,6 @@ jobs:
         days-before-close: 0.013888889
         stale-issue-label: 'stale'
         stale-pr-label: 'stale'
+    - name: test
+      run: echo 'The time was ${{ steps.hello.outputs.time }}.'
         
