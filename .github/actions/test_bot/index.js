@@ -17,6 +17,8 @@ async function run() {
     repo: payload.repository.name,
     pull_number: payload.number,
   });
+
+  console.log(files);
   
   files = files.filter((x) => {
     return x.status === 'added';
