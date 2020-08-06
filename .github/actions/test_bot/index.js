@@ -48,7 +48,15 @@ async function run() {
 
   console.log(files);
 
-  await exec.exec('black', options);
+  let changed = files.filter((x) => { 
+    return x.status == 'added' 
+  }).map((x) => { 
+    return x.filename 
+  });
+
+  await exec.exec('flake8', changed, options);
+
+  core.setFailed('FAILED');
 
   octokit.issues.createComment({
     owner: payload.repository.owner.login,
