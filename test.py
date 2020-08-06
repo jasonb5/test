@@ -13,3 +13,4 @@ newFunction(1, 2)
 # another comment
 # another another comment
 a = 10
+b = 21
