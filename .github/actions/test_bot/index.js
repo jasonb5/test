@@ -54,9 +54,9 @@ async function run() {
     return x.filename 
   });
 
-  await exec.exec('flake8', changed, options);
-
   core.setFailed('FAILED');
+
+  await exec.exec('flake8', changed, options);
 
   octokit.issues.createComment({
     owner: payload.repository.owner.login,
