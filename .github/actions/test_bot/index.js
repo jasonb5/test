@@ -11,12 +11,17 @@ async function run() {
   const payload = github.context.payload;
 
   const flake8_args = ['--format=json', '--output=flake8_output.json'];
-  const files = await octokit.pulls.listFiles({
+
+  let files = await octokit.pulls.listFiles({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     pull_number: payload.number,
-  }).filter((x) => {
+  });
+  
+  files = files.filter((x) => {
     return x.status === 'added';
+  }).map((x) => {
+    return x.filename;
   });
 
   console.log(`Found {files.length()} changed files`);
