@@ -1,69 +1,47 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
-
-// try {
-//   const nameToGreet = core.getInput('who-to-greet');
-//   console.log(`Hello ${nameToGreet}!`);
-//   const time = (new Date()).toTimeString();
-//   core.setOutput("time", time);
-//   const payload = JSON.stringify(github.context.payload, undefined, 2);
-//   console.log(`The event payload: ${payload}`);
-// } catch (error) {
-//   core.setFailed(error.message);
-// }
-
-const commands = [
-  {name: 'hello', regex: new RegExp('^\/hello.*$')},
-];
-
-let command = commands.find((x) => { return x.regex.test('/hello') });
+const io = require('@actions/io');
 
 async function run() {
+  let exitCode = 0;
+
   const token = core.getInput('token');
   const octokit = github.getOctokit(token);
   const payload = github.context.payload;
 
-  console.log(payload);
-
-  let myOutput = '';
-  let myError = '';
-
-  const options = {};
-
-  options.listeners = {
-    stdout: (data) => {
-      myOutput += data.toString();
-    },
-    stderr: (data) => {
-      myError += data.toString();
-    }
-  };
-
-  const { data: files } = await octokit.pulls.listFiles({
+  const flake8_args = ['--format=json', '--output=flake8_output.json'];
+  const files = await octokit.pulls.listFiles({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     pull_number: payload.number,
+  }).filter((x) => {
+    return x.status === 'added';
   });
 
-  console.log(files);
+  console.log(`Found {files.length()} changed files`);
 
-  let changed = files.filter((x) => { 
-    return x.status == 'added' 
-  }).map((x) => { 
-    return x.filename 
-  });
+  console.log(`Flake8 args {flake8_args}`);
 
-  core.setFailed('FAILED');
+  let outputTxt = '';
 
-  await exec.exec('flake8', changed, options);
+  const options = {
+    stdout: (data) => {
+      outputTxt += data.toString();
+    },
+  };
 
-  octokit.issues.createComment({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    issue_number: payload.issue.number,
-    body: `This PR is ok....`,
-  });
+  try {
+    await exec.exec('flake8', flake8_args.concat(files), options);
+  } catch (error) {
+    console.log(`Flake8 error: {error.message}`);
+
+    exitCode = 1;
+  }
+
+  if (exitCode === 1) {
+    core.setFailed(outputTxt);
+  }
 }
 
 run();
