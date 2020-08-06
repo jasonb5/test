@@ -24,9 +24,9 @@ async function run() {
     return x.filename;
   });
 
-  console.log(`Found {files.length()} changed files`);
+  console.log(`Found ${files.length()} changed files`);
 
-  console.log(`Flake8 args {flake8_args}`);
+  console.log(`Flake8 args ${flake8_args}`);
 
   let outputTxt = '';
 
@@ -39,12 +39,13 @@ async function run() {
   try {
     await exec.exec('flake8', flake8_args.concat(files), options);
   } catch (error) {
-    console.log(`Flake8 error: {error.message}`);
+    console.log(`Flake8 error: ${error.message}`);
 
     exitCode = 1;
   }
 
   if (exitCode === 1) {
+    console.log(`${outputTxt}`);
     core.setFailed(outputTxt);
   }
 }
