@@ -12,7 +12,7 @@ async function run() {
 
   const flake8_args = ['--format=json', '--output=flake8_output.json'];
 
-  let files = await octokit.pulls.listFiles({
+  let {data: files} = await octokit.pulls.listFiles({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     pull_number: payload.number,
