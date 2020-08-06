@@ -7,7 +7,7 @@ hello("hello world")
 def newFunction(x, y):
      return x+y
 
-# bad function
+# bad function, maybe not
 newFunction(1, 2)
 
 # another comment
