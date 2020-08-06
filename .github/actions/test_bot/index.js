@@ -40,6 +40,14 @@ async function run() {
     }
   };
 
+  const { data: files } = await octokit.pulls.listFiles({
+    owner: payload.repository.owner.login,
+    repo: payload.repository.name,
+    pull_number: payload.number,
+  });
+
+  console.log(files);
+
   await exec.exec('black', options);
 
   octokit.issues.createComment({
