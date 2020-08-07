@@ -45,7 +45,7 @@ async function run() {
 
     exitCode = 1;
   }
-
+  console.log(`Output ${outputTxt}`);
   if (exitCode === 1) {
     console.log(`${outputTxt}`);
     core.setFailed(outputTxt);
