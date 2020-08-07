@@ -3,6 +3,25 @@ const github = require('@actions/github');
 const exec = require('@actions/exec');
 const io = require('@actions/io');
 
+function formatFileDetails(data) {
+  let rows = data.map((x) => {
+    return `${x.code} | ${x.line_number} | ${x.column_number} | ${x.text}`;
+  });
+
+  const header = `Code | Line Number | Column Number | Text`;
+  const spacer = `---- | ----------- | ------------- | ----`;
+
+  return `${header}\n${spacer}\n${rows.join("\n")}`;
+}
+
+function formatFlake8(data) {
+  return Object.keys(data).map((x) => {
+    let fileDetails = formatFileDetails(data[x]);
+
+    return `<details>\n<summary>${x} (${data[x].length})</summary>\n\n${fileDetails}\n</details>\n`; 
+  }).join('\n');
+}
+
 async function run() {
   let exitCode = 0;
 
@@ -47,10 +66,12 @@ async function run() {
 
     exitCode = 1;
   }
+
   console.log(`Output ${outputTxt}`);
+
   if (exitCode === 1) {
     console.log(`${outputTxt}`);
-    core.setFailed(outputTxt);
+    core.setFailed(formatFlake8(outputTxt));
   }
 }
 
