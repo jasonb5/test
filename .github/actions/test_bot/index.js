@@ -71,7 +71,7 @@ async function run() {
 
   if (exitCode === 1) {
     console.log(`${outputTxt}`);
-    core.setFailed(formatFlake8(outputTxt));
+    core.setFailed(formatFlake8(JSON.parse(outputTxt)));
   }
 }
 
