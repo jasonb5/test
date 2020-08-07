@@ -33,9 +33,11 @@ async function run() {
   let outputTxt = '';
 
   const options = {
-    stdout: (data) => {
-      outputTxt += data.toString();
-    },
+    listeners: {
+      stdout: (data) => {
+        outputTxt += data.toString();
+      },
+    }
   };
 
   try {
