@@ -26,7 +26,7 @@ async function run() {
     return x.filename;
   });
 
-  console.log(`Found ${files.length()} changed files`);
+  console.log(`Found ${files.length} changed files`);
 
   console.log(`Flake8 args ${flake8_args}`);
 
