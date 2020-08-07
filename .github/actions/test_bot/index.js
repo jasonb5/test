@@ -10,7 +10,7 @@ async function run() {
   const octokit = github.getOctokit(token);
   const payload = github.context.payload;
 
-  const flake8_args = ['--format=json', '--output=flake8_output.json'];
+  const flake8_args = ['--format=json'];
 
   let {data: files} = await octokit.pulls.listFiles({
     owner: payload.repository.owner.login,
